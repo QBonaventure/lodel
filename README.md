@@ -38,7 +38,9 @@ Le design du site est défini par des gabarits écrits dans le langage Lodelscri
 
 Installation
 ------------
+
 Notez qu'une version pré-installée de Lodel (et OTX, l’application de conversion Word/Office vers XML/TEI) en tant qu’image de machine virtuelle linux Debian est téléchargeable à l’adresse : http://lodel.org/downloads/vms/2017/
+
 
 Pré-requis:
   - Serveur HTTP (nginx, apache) avec PHP
@@ -55,3 +57,34 @@ Marche à suivre:
   - Il faudra donner temporairement les droits d'écriture sur le dossier d'une instance de site.
   - Vérifer qu'à l'intérieur du dossier d'un site l'utilisateur du serveur HTTP a bien les droits d'écriture sur les dossiers:
       upload, docannexe, docannexe/file, docannexe/image, lodel/sources, lodel/icons
+      
+Informations complémentaires :
+  - la requête exacte pour donner les droits à l'utilisateur de la base de 
+donnée est "GRANT ALL ON `lodeldbname%`.* TO admin", contrairement à ce qui est
+indiqué via l'interface graphique durant l'installation (où `lodeldbname` est le nom spécifié lors de l'installation) ;
+      
+      
+
+### Avec Docker (pour développement / tests) ###
+
+Lodel est disponible en version docker (Nginx + Mysql + PHP-FPM). Le code 
+source lui n'est pas disponible dans un conteneur mais est partagé entre la machine
+d'accueil et le conteneur de PHP-FPM (ceci étant automatiquement effectué lors de la
+composition qui suit).
+
+L'installation de Lodel via des conteneurs Docker présuppose que ce dernier soit 
+déjà installé. Voir [l'aide à l'installation officiel](https://docs.docker.com/engine/installation/)
+si ce n'est pas le cas.
+
+Une fois le répositoire cloné, placez-vous à la raçine du code source en ligne de 
+commande, puis effectuez :
+  - modifier le valeurs "environment" du fichier compose.yml afin (notamment le
+    LOCAL_USER_ID qui est votre UID d'utilisateur Linux) ;
+  - docker-compose up --build ;
+  - lors de l'initialisation de la base de donnée, l'adresse IP du conteneur est généralement
+    172.17.0.2, ou bien 172.17.0.3 (la commande "docker inspect lodel_db | grep IPAdress"
+    vous indiquera directement la bonne) ; 
+  
+  Une fois l'opération terminé, ouvrez votre navigateur et rendez vous à l'adresse 
+  suivant : http://localhost:9009 . L'interface d'installation de Lodel devrait alors
+  apparaître !
