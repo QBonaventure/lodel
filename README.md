@@ -81,10 +81,14 @@ commande, puis effectuez :
   - modifier le valeurs "environment" du fichier compose.yml afin (notamment le
     LOCAL_USER_ID qui est votre UID d'utilisateur Linux) ;
   - docker-compose up --build ;
-  - lors de l'initialisation de la base de donnée, l'adresse IP du conteneur est généralement
-    172.17.0.2, ou bien 172.17.0.3 (la commande "docker inspect lodel_db | grep IPAdress"
-    vous indiquera directement la bonne) ; 
+  - lors de l'initialisation de la base de donnée, l'adresse IP du conteneur est 172.30.0.30 ; 
   
   Une fois l'opération terminé, ouvrez votre navigateur et rendez vous à l'adresse 
   suivant : http://localhost:9009 . L'interface d'installation de Lodel devrait alors
   apparaître !
+  
+Remarque, les adresses IP des différents conteneurs sont les suivants (tel que
+configurées dans les fichier "docker-compose.yml") :
+  - NginX > 172.30.0.10
+  - PHP-FPM > 172.30.0.20
+  - MySQL > 172.30.0.30 
