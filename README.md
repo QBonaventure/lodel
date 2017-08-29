@@ -69,26 +69,27 @@ indiqué via l'interface graphique durant l'installation (où `lodeldbname` est 
 
 Lodel est disponible en version docker (Nginx + Mysql + PHP-FPM). Le code 
 source lui n'est pas disponible dans un conteneur mais est partagé entre la machine
-d'accueil et le conteneur de PHP-FPM (ceci étant automatiquement effectué lors de la
-composition qui suit).
+hôte et le conteneur de PHP-FPM, et est destiner à faciliter le développement
+de Lodel en assurant de partager le même environnement entre chaque personne.
 
 L'installation de Lodel via des conteneurs Docker présuppose que ce dernier soit 
 déjà installé. Voir [l'aide à l'installation officiel](https://docs.docker.com/engine/installation/)
 si ce n'est pas le cas.
 
 Une fois le répositoire cloné, placez-vous à la raçine du code source en ligne de 
-commande, puis effectuez :
-  - modifier le valeurs "environment" du fichier compose.yml afin (notamment le
+commande, puis :
+  - modifiez les valeurs "environment" du fichier compose.yml afin (notamment le
     LOCAL_USER_ID qui est votre UID d'utilisateur Linux) ;
-  - docker-compose up --build ;
-  - lors de l'initialisation de la base de donnée, l'adresse IP du conteneur est 172.30.0.30 ; 
+  - renommez le fichier .docker/config.env.dist en .docker/config.env puis modifiez son
+    contenu avec vos propres valeurs ;
+  - exécutez la commance `docker-compose up --build` ;
   
-  Une fois l'opération terminé, ouvrez votre navigateur et rendez vous à l'adresse 
-  suivant : http://localhost:9009 . L'interface d'installation de Lodel devrait alors
+  Une fois l'opération terminée, ouvrez votre navigateur et rendez vous à l'adresse 
+  suivante : http://localhost:9009 . L'interface d'installation de Lodel devrait alors
   apparaître !
   
-Remarque, les adresses IP des différents conteneurs sont les suivants (tel que
-configurées dans les fichier "docker-compose.yml") :
+Remarque : les adresses IP des différents conteneurs sont les suivantes (celles-ci sont
+configurées dans le fichier "docker-compose.yml") :
   - NginX > 172.30.0.10
   - PHP-FPM > 172.30.0.20
   - MySQL > 172.30.0.30 

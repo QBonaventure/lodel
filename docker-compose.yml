@@ -32,15 +32,14 @@ services:
             - .:/code
             
     db:
-        image: wangxian/alpine-mysql
+        build:
+            context: .docker/mysql
+            dockerfile: dockerfile
         ports:
             - "3306"
         container_name: lodel_db
-        environment:
-            MYSQL_ROOT_PASSWORD: password
-            MYSQL_USER: admin
-            MYSQL_PASSWORD: password
-            MYSQL_DATABASE: database
+        env_file:
+            - .docker/config.env
         networks:
             lodelnet:
                 ipv4_address: 172.30.0.30
@@ -51,3 +50,6 @@ services:
 networks:
     lodelnet:
         driver: bridge
+        ipam:
+          config:
+               - subnet: 172.30.0.0/16
