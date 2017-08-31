@@ -5,8 +5,16 @@ RUN curl -o /usr/local/bin/gosu -sSL "https://github.com/tianon/gosu/releases/do
     apk del curl && \
     rm -rf /var/cache/apk/*
 
-RUN docker-php-ext-install mysql
+RUN apk update
+RUN apk add libpng-dev
+RUN apk add libpng-dev libjpeg
+RUN apk add zlib-dev
+RUN rm -rf /var/cache/apk/*
+
 RUN docker-php-ext-install mysqli
+RUN docker-php-ext-install pdo_mysql 
+RUN docker-php-ext-install zip 
+RUN docker-php-ext-install gd
 
 RUN sed -i '/phpize/i \
 	[[ ! -f "config.m4" && -f "config0.m4" ]] && mv config0.m4 config.m4' \
