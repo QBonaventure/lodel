@@ -7,6 +7,7 @@ error_reporting(E_ALL);
 chdir(dirname(__DIR__));
 
 require 'vendor/autoload.php';
+$_SERVER['SERVER_NAME'] = 'lodel.dev';
 
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/users', 'get_all_users_handler');
@@ -19,13 +20,11 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     // Fetch method and URI from somewhere
     $httpMethod = $_SERVER['REQUEST_METHOD'];
 
-
     $uri = $_SERVER['REQUEST_URI'];
     $queryString = '';
     if (strpos($uri, '?')) {
         list($uri, $queryString) = explode('?', $uri);
     }
-    
     $uri = rawurldecode($uri);
     $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
     switch ($routeInfo[0]) {
@@ -43,7 +42,7 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
                 if ($queryString) {
                     $_SERVER['PHP_SELF'] .= '?'.$queryString;
                 }
-                
+
                 include $scriptPath;
             }
             // ... 404 Not Found
