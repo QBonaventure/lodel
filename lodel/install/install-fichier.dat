@@ -1,18 +1,20 @@
 # les droits doivent etre tres larges, ils sont ensuite reduits par le filemask
 
-
-mkdir upload 0777
+dirdestination $homesite
 mkdir tpl 0755
 mkdir css 0755
 mkdir images 0755
-mkdir docannexe 0777
-mkdir docannexe/file 0777
-mkdir docannexe/image 0777
 mkdir lodel 0755
 mkdir lodel/edition 0755
 mkdir lodel/admin 0755
-
 htaccess tpl
+
+dirdestination $siteDataPath
+mkdir upload 0777
+mkdir docannexe 0777
+mkdir docannexe/file 0777
+mkdir docannexe/image 0777
+
 
 # evite que l'internaute puisse lister ces repertoires
 touch docannexe/index.html
@@ -22,10 +24,8 @@ htaccess docannexe/file
 ###############################################################
 ######### repertoire site
 
-dirdestination .
+dirdestination $homesite
 dirsource $homelodel
-
-dirsource $homesite
 
 # lie tous les fichiers du repertoire
 ln backend.php
@@ -37,12 +37,12 @@ ln oai.php
 
 ### desuet. cp tpl
 
-dirsource $homesite/lodel/admin
+dirsource $homelodel/lodel/admin
 ln tpl/login.html
 ln login.php
 ln logout.php
 
-dirsource $homesite/lodel/edition
+dirsource $homelodel/lodel/edition
 
 #
 
@@ -55,15 +55,15 @@ htaccess lodel/sources
 mkdir lodel/icons 0777
 touch lodel/icons/index.html
 
-dirsource $homesite/lodel
-dirdestination lodel
+dirsource $homelodel/lodel
+dirdestination $homesite/lodel
 
 ln index.php
 
 ############
 ### ajout du formulaire
-dirdestination . 
-dirsource $homesite/lodel/edition
+dirdestination $homesite
+dirsource $homelodel/lodel/edition
 ln tpl/edit_entities_edition.html
 
 ###############################################################
@@ -72,21 +72,22 @@ ln tpl/edit_entities_edition.html
 mkdir lodel/edition 0755
 mkdir lodel/edition/tpl 0755
 
-dirdestination lodel/edition
+dirdestination $homesite/lodel/edition
 
 htaccess tpl
 
-dirsource . # repertoire du site
+# repertoire du site
+dirsource $homelodel
 #ln styles_lodel.css
 
 # les logins
-dirsource $homesite/lodel/admin
+dirsource $homelodel/lodel/admin
 ln tpl/login.html
 ln login.php
 ln logout.php
 
 # tous les fichier de src/lodel/edition
-dirsource $homesite/lodel/edition
+dirsource $homelodel/lodel/edition
 ln siteconfig.php
 ln images
 ln css
@@ -146,21 +147,24 @@ ln tpl/sitemap.html
 ###############################################################
 ############# admin
 
+dirdestination $homesite
+
 mkdir lodel/admin 0755
 mkdir lodel/admin/tpl 0755
 
-dirdestination lodel/admin
+dirdestination $homesite/lodel/admin
 
 htaccess tpl
 
-dirsource . # repertoire du site
+# repertoire du site
+dirsource $homelodel 
 #ln styles_lodel.css
 
-dirsource $homesite/lodel/edition
+dirsource $homelodel/lodel/edition
 ln tpl/filebrowser.html
 
 # les logins
-dirsource $homesite/lodel/admin
+dirsource $homelodel/lodel/admin
 ln siteconfig.php
 ln tpl/login.html
 ln login.php

@@ -307,66 +307,89 @@ class siteManage {
 	 */	
 	function install_file($root, $homesite, $homelodel)
 	{
-		$file = "{$root}{$homesite}/../install/install-fichier.dat"; // homelodel est necessaire pour choper le bon fichier d'install
+	    $homelodel = $root.'/lodel/src';
+	    $siteDataPath = C::get('sitesDataPath', 'cfg').C::get('path');
+	    
+	    if ($siteDataPath == C::get('path')) {
+	       $siteDataPath = $homesite;
+	    }
+	    
+		$file = $root.'/lodel/install/install-fichier.dat'; // homelodel est necessaire pour choper le bon fichier d'install
 		if (!file_exists($file)) {
 			trigger_error("Fichier $file introuvable. Verifiez votre pactage", E_USER_ERROR);
 		}
 		$lines = file($file);
 		$dirsource = '.';
 		$dirdest   = '.';
-    		$filemask = C::get('filemask', 'cfg');
-		$search = array("/\#.*$/", '/\$homesite/', '/\$homelodel/');
-		$rpl    = array ('', $homesite, $homelodel);
+    	$filemask = C::get('filemask', 'cfg');
+		$searchReplace = array(
+		    '$homesite' => $homesite,
+		    '$homelodel' => $homelodel,
+		    '$siteDataPath' => $siteDataPath
+		);
 		$usesymlink = C::get('usesymlink', 'cfg');
 		$extensionscripts = C::get('extensionscripts', 'cfg');
-		foreach ($lines as $line) {
-			$line = rtrim(preg_replace($search, $rpl, $line));
-			if (!$line) {
-				continue;
-			}
-			@list ($cmd, $arg1) = preg_split ("/\s+/", $line);
-			$dest1 = "$root$dirdest/$arg1";
-			# quelle commande ?
+		
+		foreach ($lines as $lineNo => $line) {
+		    $line = trim($line);
+		    if (!$line or substr($line, 0, 1) == '#') {
+		        continue;
+		    }
+		    
+			$line = str_replace(array_keys($searchReplace), $searchReplace, $line);
+			
+			@list ($cmd, $arg1) = preg_split("/\s+/", $line);
+			$dest1 = $dirdest.'/'.$arg1;
+
+			
 			if ($cmd == 'dirsource') {
 				$dirsource = $arg1;
+				
 			} elseif ($cmd == 'dirdestination') {
 				$dirdest = $arg1;
+				
 			} elseif ($cmd == 'mkdir') {
-				$arg1 = $root. $arg1;
-				if (!file_exists($arg1) || !is_writeable($arg1)) {
-					if(!@mkdir($arg1, 0777 & octdec($filemask))) {
-						C::set('error_mkdir', $arg1);
+				$dirpath = $dirdest.'/'.$arg1;
+				if (!file_exists($dirpath) || !is_writeable($dirpath)) {
+					if(!@mkdir($dirpath, 0777 & octdec($filemask))) {
+						C::set('error_mkdir', $dirpath);
+						var_dump($dirpath, var_dump($lineNo));
 						View::getView()->render('site-createdir');
-						exit;	
+						exit;
 					}
 				}
-				@chmod($arg1, 0777 & octdec($filemask));
+				@chmod($dirpath, 0777 & octdec($filemask));
+				
 			} elseif ($cmd == 'ln' && $usesymlink && $usesymlink != 'non') {
+			    $link = $dirdest.'/'.$arg1;
 				if ($dirdest == '.' && $extensionscripts == 'html' && $arg1 != 'lodelconfig.php') {
-					$dest1 = preg_replace("/\.php$/", '.html', $dest1);
+				    $link = rtrim($link, ".php").'.html';
 				}
-				$toroot = preg_replace(array("/^\.\//", "/([^\/]+)\//", "/[^\/]+$/"),
-						array('', '../', ''), "$dirdest/$arg1");
-				$this->slink("$toroot$dirsource/$arg1", $dest1);
+				$toroot = preg_replace(array("/^\.\//", "/([^\/]+)\//", "/[^\/]+$/"), array('', '../', ''), "$dirdest/$arg1");
+				$this->slink($dirsource.'/'.$arg1, $link);
+				
 			} elseif ($cmd == 'cp' || ($cmd == 'ln' && (!$usesymlink || $usesymlink == 'non'))) {
 				if ($dirdest == '.' && $extensionscripts == 'html' && $arg1 != 'lodelconfig.php') {
 					$dest1 = preg_replace("/\.php$/", '.html', $dest1);
 				}
 				$this->mycopyrec("$root$dirsource/$arg1", $dest1);
+				
 			} elseif ($cmd == 'touch') {
-				if (!file_exists($dest1)) {
-					writefile($dest1, '');
+			    $filepath = $dirdest.'/'.$arg1;
+			    if (!file_exists($filepath)) {
+			        writefile($filepath, '');
 				}
-				@chmod($dest1, 0666 & octdec($filemask));
-			} elseif ($cmd == 'htaccess') {
-				if (!file_exists("$dest1/.htaccess")) {
-					$this->htaccess($dest1);
-				}
+				@chmod($filepath, 0666 & octdec($filemask));
+			} 
+			
+			elseif ($cmd == 'htaccess') {
+// 				if (!file_exists("$dest1/.htaccess")) {
+// 					$this->htaccess($dest1);
+// 				}
 			} else {
 				trigger_error("command inconnue: \"$cmd\"", E_USER_ERROR);
 			}
 		}
-		return TRUE;
 	}
 
 	/**
@@ -394,15 +417,16 @@ class siteManage {
 	 * @param var $src source du lien
 	 * @param var $dest destination du lien
 	 */	
-	function slink($src, $dest)
+	function slink($target, $link)
 	{
-		@unlink($dest); // detruit le lien s'il existe
-		if (!(@symlink($src,$dest))) {
-			@chmod(basename($dest), 0777 & octdec(C::get('filemask', 'cfg')));
-			symlink($src, $dest);
+		@unlink($link); // detruit le lien s'il existe
+		if (!(@symlink($target, $link))) {
+			@chmod(basename($link), 0777 & octdec(C::get('filemask', 'cfg')));
+			symlink($target, $link);
 		}
-		if (!file_exists($dest)) {
-			echo ("Warning: impossible d'acceder au fichier $src via le lien symbolique $dest<br />");
+		
+		if (!file_exists($link)) {
+			echo ("Warning: impossible d'acceder au fichier $target via le lien symbolique $link<br />");
 		}
 	}
 
@@ -700,13 +724,14 @@ class siteManage {
 	function manageFiles()
 	{
 		global $db;
+		
 		// verifie la presence ou copie les fichiers necessaires
 		// cherche dans le fichier install-file.dat les fichiers a copier
 		// on peut installer les fichiers
 		if (!C::get('path')) {
 			C::set('path', '/'. C::get('name'));
 		}
-		$root = str_replace('//', '/', LODELROOT. C::get('path')). '/';
+		$root = realpath(str_replace('//', '/', LODELROOT). '/');
 		$siteconfigcache = cache_get('siteconfig.php');
 		if (C::get('downloadsiteconfig')) { // download the siteconfig
 			download('', 'siteconfig.php', $siteconfigcache);
@@ -722,7 +747,7 @@ class siteManage {
 			View::getView()->render('site-file');
 			exit();
 		}
-		$siteconfigdest = $root. 'siteconfig.php';
+		$siteconfigdest = $root. '/siteconfig.php';
 
 		// Si le fichier de conf n'existe pas on le crée ou propose de le créer
 		if (!file_exists($siteconfigdest)) {
@@ -745,10 +770,11 @@ class siteManage {
 			@chmod ($siteconfigdest, 0666 & octdec(C::get('filemask', 'cfg')));
 		}
 		// ok siteconfig est copie.
+
 		if (C::get('path') == '/') { // c'est un peu sale ca.
 			$this->install_file($root, $this->versiondir."/src", '');
 		} else {
-			$this->install_file($root, "../".$this->versiondir."/src", LODELROOT);
+			$this->install_file($root, $root.C::get('path'), $root.'/'.$this->versiondir);
 		}
 		
 		// clear the cache
