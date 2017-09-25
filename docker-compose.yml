@@ -13,8 +13,8 @@ services:
             - "80"
             - "443"
         volumes:
-            - .:/code
-            - ./.docker/site.conf:/etc/nginx/conf.d/default.conf
+            - .:/code:z
+            - ./.docker/site.conf:/etc/nginx/conf.d/default.conf:z
     
     php:
         build:
@@ -29,7 +29,7 @@ services:
             lodelnet:
                 ipv4_address: 172.30.0.20
         volumes:
-            - .:/code
+            - .:/code:z
             
     db:
         build:
@@ -44,8 +44,8 @@ services:
             lodelnet:
                 ipv4_address: 172.30.0.30
         volumes:
-            - ./data/mysql/:/docker-entrypoint-initdb.d
-            - ./data_volume:/var/lib/mysql
+            - ./data/mysql/:/docker-entrypoint-initdb.d:z
+            - ./data_volume:/var/lib/mysql:z
 
 networks:
     lodelnet:

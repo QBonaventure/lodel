@@ -16,10 +16,14 @@ sed -i "s/^\$cfg\['debugMode.*$/\$cfg['debugMode'] = $DEBUG_MODE;/g" /code/lodel
 chmod 664 /code/lodelconfig.php
 chown $USER_ID:$USER_ID /code/lodelconfig.php
 
+composer update -d /code
+
 keyfile=$(sed -n 's/\$cfg\['\''install_key'\''] = '\''\(.*\)'\'';/\1/p' /code/lodelconfig.php)
 echo $keyfile
 touch /code/$keyfile
 chmod 664 /code/$keyfile
 chown $USER_ID:$USER_ID /code/$keyfile
+
+
 
 exec php-fpm
