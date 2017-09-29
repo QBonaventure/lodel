@@ -351,7 +351,7 @@ class siteManage {
 			} elseif ($cmd == 'mkdir') {
 				$dirpath = $dirdest.'/'.$arg1;
 				if (!file_exists($dirpath) || !is_writeable($dirpath)) {
-					if(!@mkdir($dirpath, 0777 & octdec($filemask))) {
+					if(!@mkdir($dirpath, 0777 & octdec($filemask), true)) {
 						C::set('error_mkdir', $dirpath);
 						var_dump($dirpath, var_dump($lineNo));
 						View::getView()->render('site-createdir');
