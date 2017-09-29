@@ -196,6 +196,7 @@ $cfg['filemask']="0700";
 $cfg['usesymlink']="oui";
 $cfg['installoption']="2";
 $cfg['installlang']="fr";
+$cfg['sitesDataDir'] = '';
 ////////////////////////////////////////////////////////////////////////////////////////
 
 $GLOBALS['cacheOptions'] = $cfg['cacheOptions'];
