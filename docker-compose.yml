@@ -30,6 +30,7 @@ services:
                 ipv4_address: 172.30.0.20
         volumes:
             - .:/code:z
+            - /var/www/lodelsites:/var/www/lodelsites:z
             
     db:
         build:
