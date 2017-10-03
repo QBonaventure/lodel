@@ -758,8 +758,6 @@ class siteManage {
 				View::getView()->render('site-file');
 				exit();
 			}
-			@unlink($siteconfigdest); // try to delete before copying. (?)
-			// try to copy now.
 
 			if (!@file_put_contents($siteconfigdest, cache_get('siteconfig.php'))) {
 				C::set('siteconfigdest', $siteconfigdest);
