@@ -747,7 +747,7 @@ class siteManage {
 			View::getView()->render('site-file');
 			exit();
 		}
-		$siteconfigdest = $root. '/siteconfig.php';
+		$siteconfigdest = $root.C::get('path').'/siteconfig.php';
 
 		// Si le fichier de conf n'existe pas on le crée ou propose de le créer
 		if (!file_exists($siteconfigdest)) {
