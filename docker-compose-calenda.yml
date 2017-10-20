@@ -1,24 +1,32 @@
 version: "3.3"
 services:
     web:
-        image: nginx:alpine
+        build:
+            context: .docker/calenda/server
+            dockerfile: dockerfile
         container_name: lodel_server
         links:
             - php
             - "db:database"
         networks:
             lodelnet:
-                ipv4_address: 172.30.0.10
+                ipv4_address: 172.31.0.10
         expose:
             - "80"
             - "443"
+        tty: true
+        restart: always
         volumes:
             - .:/code:z
-            - ./.docker/site.conf:/etc/nginx/conf.d/default.conf:z
+            - ./.docker/calenda/server/calenda-site.conf:/etc/nginx/conf.d/calenda.conf:z
+            - ./.docker/calenda/server/lodel-site.conf:/etc/nginx/conf.d/lodel.conf:z
+            - ./.docker/calenda/server/fastcgi-php.conf:/etc/nginx/snippets/fastcgi-php.conf:z
+            - ./.docker/calenda/server/acl:/etc/nginx/snippets/acl.conf:z
+            - ./.docker/calenda/server/nginx.conf:/etc/nginx/conf/nginx.conf:z
 
     php:
         build:
-            context: .docker/fpm
+            context: .docker/calenda/fpm
             dockerfile: dockerfile
         container_name: lodel_php
         env_file:
@@ -27,29 +35,31 @@ services:
             - "9000"
         networks:
             lodelnet:
-                ipv4_address: 172.30.0.20
+                ipv4_address: 172.31.0.20
         volumes:
             - .:/code:z
             - /var/www/lodelsites:/lodelsites:z
 
     db:
         build:
-            context: .docker/mysql
+            context: .docker/calenda/db
             dockerfile: dockerfile
         env_file:
             - .docker/config.env
         ports:
             - "3306"
-        container_name: lodel_db
+        container_name: calenda_db
         networks:
             lodelnet:
-                ipv4_address: 172.30.0.30
+                ipv4_address: 172.31.0.30
+        tty: true
         volumes:
             - ./data/mysql/:/docker-entrypoint-initdb.d:z
+            - /home/qbonaventure/.ssh/:/ssh/:z
 
 networks:
     lodelnet:
         driver: bridge
         ipam:
           config:
-               - subnet: 172.30.0.0/16
+               - subnet: 172.31.0.0/16
