@@ -54,7 +54,22 @@ services:
                 ipv4_address: 172.31.0.30
         tty: true
         volumes:
-            - ./data/mysql/:/docker-entrypoint-initdb.d:z
+            - /home/qbonaventure/.ssh/:/ssh/:z
+
+    solr:
+        build:
+            context: .docker/calenda/solr
+            dockerfile: dockerfile
+        env_file:
+            - .docker/config.env
+        ports:
+            - "8983"
+        container_name: calenda_solr
+        networks:
+            lodelnet:
+                ipv4_address: 172.31.0.40
+        tty: true
+        volumes:
             - /home/qbonaventure/.ssh/:/ssh/:z
 
 networks:
