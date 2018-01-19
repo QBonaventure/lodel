@@ -1,0 +1,15 @@
+FROM alpine
+
+RUN apk add --update openssh curl && \
+    curl -o /usr/local/bin/gosu -sSL "https://github.com/tianon/gosu/releases/download/1.2/gosu-amd64" && \
+    chmod +x /usr/local/bin/gosu && \
+    apk del curl && \
+    rm -rf /var/cache/apk/*
+
+
+COPY entrypoint.sh /
+
+EXPOSE 3306
+
+ENTRYPOINT ["/entrypoint.sh"]
+
