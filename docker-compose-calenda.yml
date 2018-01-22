@@ -4,7 +4,7 @@ services:
         build:
             context: .docker/calenda/server
             dockerfile: dockerfile
-        container_name: lodel_server
+        container_name: calenda_server
         links:
             - php
             - "db:database"
@@ -28,7 +28,7 @@ services:
         build:
             context: .docker/calenda/fpm
             dockerfile: dockerfile
-        container_name: lodel_php
+        container_name: calenda_php
         env_file:
             - .docker/config.env
         expose:
