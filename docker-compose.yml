@@ -18,11 +18,10 @@ services:
         restart: always
         volumes:
             - .:/code:z
-            - ./.docker/calenda/server/calenda-site.conf:/etc/nginx/conf.d/calenda.conf:z
-            - ./.docker/calenda/server/lodel-site.conf:/etc/nginx/conf.d/lodel.conf:z
-            - ./.docker/calenda/server/fastcgi-php.conf:/etc/nginx/snippets/fastcgi-php.conf:z
-            - ./.docker/calenda/server/acl:/etc/nginx/snippets/acl.conf:z
-            - ./.docker/calenda/server/nginx.conf:/etc/nginx/conf/nginx.conf:z
+            - ./.docker/lodel/server/lodel-site.conf:/etc/nginx/conf.d/lodel.conf:z
+            - ./.docker/lodel/server/fastcgi-php.conf:/etc/nginx/snippets/fastcgi-php.conf:z
+            - ./.docker/lodel/server/acl:/etc/nginx/snippets/acl.conf:z
+            - ./.docker/lodel/server/nginx.conf:/etc/nginx/conf/nginx.conf:z
 
 
     php:
@@ -55,7 +54,7 @@ services:
                 ipv4_address: 172.30.0.30
         tty: true
         volumes:
-            - /home/qbonaventure/.ssh/:/ssh/:z
+            - ./data/mysql:/docker-entrypoint-initdb.d/:z
 
     solr:
         build:
@@ -70,8 +69,8 @@ services:
             lodelnet:
                 ipv4_address: 172.30.0.40
         tty: true
-        volumes:
-            - /home/qbonaventure/.ssh/:/ssh/:z
+#        volumes:
+#            - /home/qbonaventure/.ssh/:/ssh/:z
 
 networks:
     lodelnet:
