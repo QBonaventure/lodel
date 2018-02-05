@@ -1,4 +1,12 @@
 {
+    "name": "OpenEdition/lodel",
+    "description": "A free electronic edition CMS provided to you by Cléo (Centre pour l'Edition Electronique Ouverte) / OpenEdition",
+    "homepage": "http://www.lodel.org/",
+    "type": "project",
+    "license": "GPL-2.0",
+    "config": {
+        "sort-packages": true
+    },
     "require": {
         "adodb/adodb-php": "5.20",
         "simplepie/simplepie": "1.5",
