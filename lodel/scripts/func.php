@@ -1231,7 +1231,6 @@ function find_in_path($fichier)
 function thumbnail($path, $width = null, $height = null)
 {
     global $context;
-    class_exists('Zebra_Image') || require 'Zebra_Image.php';
 
     $image_infos = pathinfo($path);
     $cache_options = C::get('cacheOptions', 'cfg');
