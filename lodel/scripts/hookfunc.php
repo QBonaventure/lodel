@@ -4,6 +4,7 @@
  * @license GPL 2 (http://www.gnu.org/licenses/gpl.html) See COPYING file
  * @authors See COPYRIGHT file
  */
+use VuFindCode\ISBN;
 
 if (is_readable(C::get('home', 'cfg').'hookfunc_local.php'))
 	include 'hookfunc_local.php';
@@ -43,7 +44,7 @@ function check_isbn(&$context, $field, &$errors)
 {
 	if(isset($context['do']) && $context['do'] == "edit" && !empty($context['data'][$field]))
 	{
-		require_once 'ISBN.php';
+		require_once 'vendor/autoload.php';
 		$isbn = preg_replace('/[ -]/', '', $context['data'][$field]);
 		$validator = new ISBN($isbn);
 

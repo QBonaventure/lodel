@@ -1,0 +1,1 @@
+lodel-common/lodel/scripts/loops_local_indexing.php

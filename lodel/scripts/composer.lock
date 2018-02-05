@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "8d684c74bc34b236a6dfaeb70db15403",
+    "content-hash": "d1f49343c28200b963edd5403fae6298",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -505,6 +505,51 @@
                 "rss"
             ],
             "time": "2017-04-17T07:29:31+00:00"
+        },
+        {
+            "name": "vufind-org/vufindcode",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vufind-org/vufindcode.git",
+                "reference": "f50091c35f50865b926bac549e671347c4d4389d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vufind-org/vufindcode/zipball/f50091c35f50865b926bac549e671347c4d4389d",
+                "reference": "f50091c35f50865b926bac549e671347c4d4389d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "1.11.3",
+                "phploc/phploc": "2.0.6",
+                "phpmd/phpmd": "1.5.0",
+                "phpunit/phpunit": "4.8.4",
+                "sebastian/phpcpd": "1.4.3",
+                "squizlabs/php_codesniffer": "2.6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "VuFindCode\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Demian Katz",
+                    "email": "demian.katz@villanova.edu"
+                }
+            ],
+            "description": "Class for representing ISBNs (a VuFind support library)",
+            "homepage": "https://vufind.org/",
+            "time": "2016-06-06T19:12:16+00:00"
         }
     ],
     "packages-dev": [],
