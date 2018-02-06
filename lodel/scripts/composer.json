@@ -7,6 +7,7 @@
     "config": {
         "sort-packages": true
     },
+    "minimum-stability": "stable",
     "require": {
         "adodb/adodb-php": "^5.20",
         "ezyang/htmlpurifier": "^4.9",
